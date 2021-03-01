@@ -3,7 +3,7 @@ name: 喜马拉雅极速版
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/25 * * * *'
   watch:
     types: [started]
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - name: 'Install requirements'
         run: pip install requests
 
-      - name: 'run 喜马拉雅极速版'
+      - name: 'run 喜马拉雅极速版 1'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
