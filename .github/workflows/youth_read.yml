@@ -15,7 +15,7 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       YOUTH_READ_1: true
-      YOUTH_READ_2: false
+      YOUTH_READ_2: true
       YOUTH_READ_3: false
       YOUTH_READ_4: true
       TZ: Asia/shanghai
