@@ -39,7 +39,7 @@ jobs:
           node Task/youth_read.js
 
       - name: '运行 【中青看点自动阅读二】'
-        if: env.YOUTH_READ_2
+        if: env.YOUTH_READ_2 == true
         run: |
           cd ~/scripts
           node Task/youth_read.js
