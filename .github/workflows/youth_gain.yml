@@ -25,7 +25,7 @@ jobs:
           cd ~/scripts
           npm install
           
-      - name: '运行 【中青浏览赚 & 看看赚】'
+      - name: '运行 【中青浏览赚】'
         run: |
           cd ~/scripts
           node Task/youth_gain.js
