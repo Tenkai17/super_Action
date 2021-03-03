@@ -29,8 +29,8 @@ jobs:
           cd ~/scripts
           npm install
           
-      - name: '运行 【中青看点2】'
+      - name: '运行 【中青安卓】'
         run: |
           cd ~/scripts
-          node Task/youth2.js
+          node Task/youthAndroid.js
        
