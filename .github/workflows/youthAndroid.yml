@@ -1,36 +1,156 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: 中青安卓
 
-on:
-  workflow_dispatch:
-  schedule:
-     - cron: '*/22 * * * *'
-  watch:
-    types: started
+const $ = new Env("中青安卓");
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    if: github.event.repository.owner.id == github.event.sender.id
-    steps:
-      - name: Checkout
-        run: |
-          ${{ secrets.ZQ_HTTPS }}
-          
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-          
-      - name: npm install
-        run: |
-          cd ~/scripts
-          npm install
-          
-      - name: '运行 【中青安卓】'
-        run: |
-          cd ~/scripts
-          node Task/youthAndroid.js
-       
+// const UA = $.isNode() ? require('./USER_AGENTS').USER_AGENT : '';
+// const UA = 'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+const UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+const nowTime = Math.round(new Date() / 1000)
+
+async function binding() {
+    await toGetReward();
+
+    await $.wait(600);
+    await videoCallback();
+
+    await $.wait(600);
+    await toDouble();
+}
+
+
+// 安卓 -- 右上角 -- 时段红包奖励
+async function toGetReward() {
+    return new Promise((resolve, reject) => {
+//         const api = {
+//             url: 'https://kandian.youth.cn/v5/CommonReward/toGetReward.json',
+//             headers: {
+//                 'os-version': 'PKQ1.190118.001',
+//                 'device-model': 'MI+6',
+//                 'phone-sim': '1',
+//                 'carrier': '%E4%B8%AD%E5%9B%BD%E7%A7%BB%E5%8A%A8', // encodeURI('中国移动')
+//                 'request_time': '1614733523',
+//                 'access': 'WIFI',
+//                 'os-api': '26',
+//                 'device-platform': 'android',
+//                 'openudid': '42cda15e6864c1b7',
+//                 'app-version': '2.8.8',
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//                 'Content-Length': '1427',
+//                 'Host': 'kandian.youth.cn',
+//                 'Connection': 'Keep-Alive',
+//                 'Accept-Encoding': 'gzip',
+//                 'User-Agent': 'okhttp/3.12.2',
+//             }
+//         }
+        const api = {
+            url: 'https://kandian.youth.cn/v5/CommonReward/toGetReward.json',
+            headers: {
+                'request_time': nowTime,
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': '1427',
+                'Connection': 'Keep-Alive',
+                'Accept-Encoding': 'gzip',
+                'User-Agent': 'okhttp/3.12.2',
+            },
+            body: 'p=7wNMsLAQgw3E%3DkVUgbUu3YrY1EuG9UuFzZyjH2OedFHGDtwJWhVynaedtt5kANOimJJ5-2WEJo0V9eRMYmrHebNzxAUBzJeUaZiCQFVxNFM7z1JkzMX0ap0NkzQHPtlEfsEFGsrzpYQKzAjCm98VRtbBIHaVPyNkSDxoMRGI0exW38Y-uQgDgTpW2fob5fgHh-5nF1x87e9D-yaqDGQlA3OpbLmYKNQMZEJySmtzKfIi0xAvlB6K9IYydIJ2NLkhLhYFTVP1XYDCoBSGh8QZVMQE8r__jzGqvbXWHk2kwViZCkT7bbzX_1f9PMsEYXKCCrkBC3VxrJh27f4tKLUCXH9XKoPIYhUra7l-wEENfdwmivcc3Roo73NiLAdgqqrq9JPNLiy9v6822TsoAGnys4tMvZ1KkjlT5LcueEOtKOM9XEzCH5UAGBWfJsx7cmBvnt6AhaeqEtzK3wrVh44q_wuSFKYnhCWfzIl3Pa2chib6CvLWbrI_P1DOU-NnDSU_6L7Z6SvijbNYoRBq6E7oFbgoRDuZnFUjQQplYEMk_XTK2qpZMsx9G50outKURNdfwxgUOuKZBe1VIs-9bmPmKYAJmCt2N_xICn7pCDu6WknATCiKYneIeg15lQ73whKbjSKXyVSvFg0g1IP4gJYRFiOROh1_dqy3XewV9BDFQQ7JvInETRgMbsnftiMx8apZkKd9GZEKkVY8EkeKVaC3Ak0oouxOEB9BVarzOvm8s0BMsirO5sVhD2I80eUEu5fi0-6cJgScQoZ0pqrQGZw8mypv9NQ1mCx8nEiPSIB2iEaYj6HJmA9lQio_ficyxE6ssLbezU4DK4-FxemtMFsTLiiwzdteLVhC7VrQ_eZBRbBuh830R5-E3r-MRnA47an_1_Sg_aLYL64lKhqyRCyTWn0rqcx5hP8orWvDgQPX5pjbizNcw_btZXaCI_i4clvFfhQTO668Y4E2oL_1XZduU1PlK2VLSJOfcz00WP42tYMk9LucHx7I0n2YiKbzeuZDCmNrLDCUIb7bQoUBwVQwKLhszJfbs70_psnW-s2o_uDiWgRlY0-nViGi0odIifFB9RLhEVCNzo9ogM-9Y_WLmqM5thatFy27WLjX3Y0vPM5_NIy38Imdj_0mQUwPJ10YbgQLTxlKoqrdWnC4tHJi_6WmMDzvYowWgnJJYyec7YDbfoT39ZAEs6LIeHZVdCAJFUXskR7VZLaJKXDzP7TNICy8BmCQYKi9R4J9Okd1dNSRHLiG68uArKPM7ORwTohm4rhTcw9RNZCgRaKqcBLzoVcY5w_1OeLu7pAeZnD5skK8ywbr4_JNHDnoRaA4pFz0fMyUle0-GTKscKk1PZp_qzuhDCHLtaaua90jS30iq-Dc8LWo05yUv-yh1yuc327pR_3eIHFXSKXP5S6'
+        }
+        $.post(api, async(error, resp, data) => {
+            console.log('== 打印时段红包奖励：', data)
+            try {
+                let con = JSON.parse(data);
+                if (con.success) {
+                    console.log('获得：' + con.items.score)
+                }
+            } catch (e) {
+                $.log("获取任务失败，" + e)
+            } finally {
+                resolve()
+            }
+        })
+    })
+}
+
+// 安卓 -- 右上角 -- 时段领取青豆 -- 视频奖励
+function videoCallback() {
+    return new Promise((resolve, reject) => {
+        const api = {
+            url: 'https://kandian.youth.cn/v17/Rvideo/videoCallback.json',
+            headers: {
+                'Token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhY2Nlc3MiOiJXSUZJIiwiYWN0aW9uIjoicmlnaHRfY29ybmVyX3ZpZGVvIiwiYW5kcm9pZGlkIjoiNDJjZGExNWU2ODY0YzFiNyIsImFwcC12ZXJzaW9uIjoiMi44LjgiLCJhcHBfbmFtZSI6Inpxa2RfYXBwIiwiYXBwX3ZlcnNpb24iOiIyLjguOCIsImNhcnJpZXIiOiIlRTQlQjglQUQlRTUlOUIlQkQlRTclQTclQkIlRTUlOEElQTgiLCJjaGFubmVsIjoiYzEwMDIiLCJkZXZpY2VfYnJhbmQiOiJYaWFvbWkiLCJkZXZpY2VfaWQiOiI1MDc0NzQ4OCIsImRldmljZV9tb2RlbCI6Ik1JKzYiLCJkZXZpY2VfcGxhdGZvcm0iOiJhbmRyb2lkIiwiZGV2aWNlX3R5cGUiOiJhbmRyb2lkIiwiZHBpIjoiNDgwIiwiZnAiOiJEdUROd3k1aXRvQlljJTJCT09FUnRZbTVoZFNEbXVnZFE4R2tuZFJKcXRtd2g5eFNKemFBN3RWaEZBc0F0YU5NUE5FaHowdlc3bEw4VWhBV2klMkY1TDQ0YTJmZyIsImltZWkiOiI4NjY4MjIwMzg3ODIwMjUiLCJpbm5lcl92ZXJzaW9uIjoiMjAyMTAyMDMxNjU0IiwibGFuZ3VhZ2UiOiJ6aC1DTiIsIm1lbW9yeSI6IjUiLCJtaSI6IjEiLCJtb2JpbGVfdHlwZSI6IjEiLCJuZXRfdHlwZSI6IjEiLCJuZXR3b3JrX3R5cGUiOiJXSUZJIiwib3BlbnVkaWQiOiI0MmNkYTE1ZTY4NjRjMWI3Iiwib3NfYXBpIjoiMjgiLCJvc192ZXJzaW9uIjoiUEtRMS4xOTAxMTguMDAxIiwicmVxdWVzdF90aW1lIjoiMTYxNDczOTEzMSIsInJlc29sdXRpb24iOiIxMDgweDE5MjAiLCJyb21fdmVyc2lvbiI6IlBLUTEuMTkwMTE4LjAwMSIsInNpbSI6IjEiLCJzbV9kZXZpY2VfaWQiOiIyMDIxMDIyNzIxMTI0NzVjMzBiMmRlMGFhNGViMjg5Y2EzN2VjYzI4MzJjM2RiMDEzNjA0ZTcyZDM5M2Q5MCIsInN0b3JhZ2UiOiIxMTAuMjYiLCJzdWJ2IjoiMS4yLjIiLCJzemxtX2RkaWQiOiJEdUROd3k1aXRvQlljJTJCT09FUnRZbTVoZFNEbXVnZFE4R2tuZFJKcXRtd2g5eFNKemFBN3RWaEZBc0F0YU5NUE5FaHowdlc3bEw4VWhBV2klMkY1TDQ0YTJmZyIsInVpZCI6IjU0MDM5NzgwIiwidmVyc2lvbl9jb2RlIjoiNTYiLCJ6cWtleSI6Ik1EQXdNREF3TURBd01KQ01wTi13MDlXdGc1LUJiMzZlaDZDUHFIdWFsSWVqbDY5MXBheXl0NWR0aEh5cDRMRFB5R2w5b25xa2ozWnFZSmE4WTg5OG5haldzSnVwWkxDM2hXeUVzcURkcnQtaWFwcUdjWFkiLCJ6cWtleV9pZCI6IjkzOWZmN2YyMjQ3OTRmZWYwNTIzNDc1NzRkY2M3MzcwIn0.wApaa6VQggxxJ3L864zxpFkHBTFjDWHuS5_VgW80UKeqvChwsSjYtK2jjVmjIhMLZ-T2nK5qSvGsebgNz86rXw',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': '2770',
+                'Connection': 'Keep-Alive',
+                'Accept-Encoding': 'gzip',
+                'User-Agent': 'okhttp/3.12.2',
+            },
+            body: 'access=WIFI&action=right_corner_video&androidid=42cda15e6864c1b7&app-version=2.8.8&app_name=zqkd_app&app_version=2.8.8&carrier=%E4%B8%AD%E5%9B%BD%E7%A7%BB%E5%8A%A8&channel=c1002&device_brand=Xiaomi&device_id=50747488&device_model=MI%206&device_platform=android&device_type=android&dpi=480&fp=DuDNwy5itoBYc%2BOOERtYm5hdSDmugdQ8GkndRJqtmwh9xSJzaA7tVhFAsAtaNMPNEhz0vW7lL8UhAWi%2F5L44a2fg&imei=866822038782025&inner_version=202102031654&language=zh-CN&memory=5&mi=1&mobile_type=1&net_type=1&network_type=WIFI&openudid=42cda15e6864c1b7&os_api=28&os_version=PKQ1.190118.001&request_time=1614739131&resolution=1080x1920&rom_version=PKQ1.190118.001&sim=1&sm_device_id=202102272112475c30b2de0aa4eb289ca37ecc2832c3db013604e72d393d90&storage=110.26&subv=1.2.2&szlm_ddid=DuDNwy5itoBYc%2BOOERtYm5hdSDmugdQ8GkndRJqtmwh9xSJzaA7tVhFAsAtaNMPNEhz0vW7lL8UhAWi%2F5L44a2fg&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhY2Nlc3MiOiJXSUZJIiwiYWN0aW9uIjoicmlnaHRfY29ybmVyX3ZpZGVvIiwiYW5kcm9pZGlkIjoiNDJjZGExNWU2ODY0YzFiNyIsImFwcC12ZXJzaW9uIjoiMi44LjgiLCJhcHBfbmFtZSI6Inpxa2RfYXBwIiwiYXBwX3ZlcnNpb24iOiIyLjguOCIsImNhcnJpZXIiOiIlRTQlQjglQUQlRTUlOUIlQkQlRTclQTclQkIlRTUlOEElQTgiLCJjaGFubmVsIjoiYzEwMDIiLCJkZXZpY2VfYnJhbmQiOiJYaWFvbWkiLCJkZXZpY2VfaWQiOiI1MDc0NzQ4OCIsImRldmljZV9tb2RlbCI6Ik1JKzYiLCJkZXZpY2VfcGxhdGZvcm0iOiJhbmRyb2lkIiwiZGV2aWNlX3R5cGUiOiJhbmRyb2lkIiwiZHBpIjoiNDgwIiwiZnAiOiJEdUROd3k1aXRvQlljJTJCT09FUnRZbTVoZFNEbXVnZFE4R2tuZFJKcXRtd2g5eFNKemFBN3RWaEZBc0F0YU5NUE5FaHowdlc3bEw4VWhBV2klMkY1TDQ0YTJmZyIsImltZWkiOiI4NjY4MjIwMzg3ODIwMjUiLCJpbm5lcl92ZXJzaW9uIjoiMjAyMTAyMDMxNjU0IiwibGFuZ3VhZ2UiOiJ6aC1DTiIsIm1lbW9yeSI6IjUiLCJtaSI6IjEiLCJtb2JpbGVfdHlwZSI6IjEiLCJuZXRfdHlwZSI6IjEiLCJuZXR3b3JrX3R5cGUiOiJXSUZJIiwib3BlbnVkaWQiOiI0MmNkYTE1ZTY4NjRjMWI3Iiwib3NfYXBpIjoiMjgiLCJvc192ZXJzaW9uIjoiUEtRMS4xOTAxMTguMDAxIiwicmVxdWVzdF90aW1lIjoiMTYxNDczOTEzMSIsInJlc29sdXRpb24iOiIxMDgweDE5MjAiLCJyb21fdmVyc2lvbiI6IlBLUTEuMTkwMTE4LjAwMSIsInNpbSI6IjEiLCJzbV9kZXZpY2VfaWQiOiIyMDIxMDIyNzIxMTI0NzVjMzBiMmRlMGFhNGViMjg5Y2EzN2VjYzI4MzJjM2RiMDEzNjA0ZTcyZDM5M2Q5MCIsInN0b3JhZ2UiOiIxMTAuMjYiLCJzdWJ2IjoiMS4yLjIiLCJzemxtX2RkaWQiOiJEdUROd3k1aXRvQlljJTJCT09FUnRZbTVoZFNEbXVnZFE4R2tuZFJKcXRtd2g5eFNKemFBN3RWaEZBc0F0YU5NUE5FaHowdlc3bEw4VWhBV2klMkY1TDQ0YTJmZyIsInVpZCI6IjU0MDM5NzgwIiwidmVyc2lvbl9jb2RlIjoiNTYiLCJ6cWtleSI6Ik1EQXdNREF3TURBd01KQ01wTi13MDlXdGc1LUJiMzZlaDZDUHFIdWFsSWVqbDY5MXBheXl0NWR0aEh5cDRMRFB5R2w5b25xa2ozWnFZSmE4WTg5OG5haldzSnVwWkxDM2hXeUVzcURkcnQtaWFwcUdjWFkiLCJ6cWtleV9pZCI6IjkzOWZmN2YyMjQ3OTRmZWYwNTIzNDc1NzRkY2M3MzcwIn0.wApaa6VQggxxJ3L864zxpFkHBTFjDWHuS5_VgW80UKeqvChwsSjYtK2jjVmjIhMLZ-T2nK5qSvGsebgNz86rXw&uid=54039780&version_code=56&zqkey=MDAwMDAwMDAwMJCMpN-w09Wtg5-Bb36eh6CPqHualIejl691payyt5dthHyp4LDPyGl9onqkj3ZqYJa8Y898najWsJupZLC3hWyEsqDdrt-iapqGcXY&zqkey_id=939ff7f224794fef052347574dcc7370'
+        }
+        $.post(api, async(error, resp, data) => {
+            console.log('== 打印视频奖励：', data)
+            try {
+                let con = JSON.parse(data);
+                if (con.success) {
+                    console.log('获得：' + con.items.dialog.score)
+                }
+            } catch (e) {
+                $.log("获取任务失败，" + e)
+            } finally {
+                resolve()
+            }
+        })
+    })
+}
+
+// 安卓 -- 做任务激励视频奖励
+function toDouble() {
+    return new Promise((resolve, reject) => {
+        const api = {
+            url: 'https://kandian.youth.cn/v5/CommonReward/toDouble.json',
+            headers: {
+                'os-version': 'PKQ1.190118.001',
+                'request_time': nowTime,
+                'app-version': '2.8.8',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': '1453',
+                'Connection': 'Keep-Alive',
+                'Accept-Encoding': 'gzip',
+                'User-Agent': 'okhttp/3.12.2',
+            },
+            body: 'p=Y2JgR8oZr6IU%3DVmMClolfy5CipyGPB9l1gcF_LCKvpLUMnh6vRDgJqXPavhCDjQwNRwVu-BP0v2Kimz6Rll8NjXG8D-sD3xEqkyvhP1f7so9ujPXUFYoIHU7ZDXvD8ebB_DzvgyHYnDSUIjvXC9_r4yZz0WO334ymv-7iJ3L89n4_QwJub0hwpaoDYALjUedaNa9Ur3yI4lnHfP3rF4g6fsBcquypXtLJDTqys1ufcGwl30iyVWRXZasp-QcxGVGJ3Lv9yFGqthe8DL6lTJ5qXKiQzl19XqdNi45Db60ej__xkzB_vK3maL78513XON1Jg9ZsVzUQsZbPOKK3LGMuwpRn1C1s09FCX_hk7bb299IMOkTJrYwkHtdCYfqUBUzRUz50TcMCb0b99i3fZLb5-vGzpVa0ex0hU-3_0A3n9ayatVG_xNQZgXby5dRhHivql94SVEvheISaWg_UlXT7TwN25g0nFL6gotdipMd-0wGX74ZdXxETRoIgS23d6DKvjq1RK_jXGrp2apje6rDOBXHOVP233ju4Qef5oopkKEz-tUs9uCBKgatdhDOpvq6s27UyXsgqrk9be72JjWefX5SpAJlrrQjujKPikkZMe5cHYzB7TSRE3_jGxkQf8H8hUWu30WUvvVGhpOZ8a2kWQ1p8Igle0S_pd8Uzv71suiwS58MzXvxjE5ERaTJovqSs7BKNwyO-RNsXzmHAu0Oo04-LjuPyW7rx024PRvTOLPHpMkgqlGhqh4eQW46OYhX4dThHpjjNGI-cIw949Al3B-jQ2YV8f8-NG5hae12Z3-0wKrWCnKqUhDU0fYbDpcfxOuaQfuMfJwZSAQMtWkJnu6wFLC0cf2w-0QiwC7-uE719y_BagZOkk7j0wcCdyRYDlicLv5jwu1Y-0eMyQT-MOI9y5Ll3RiJf1ar75tR5tJmGB9OFPcyrdCmWRR5Qo_lXySASQtTnKYq0FuPWtUO3_0YTaVlg5RLbJzRMv50kKOPiMgfVznU7xdPt-ROPuk7wH81bT30iJ1nQvsZqS8e_9zrLqkkl6k1BDVqYEXpwEoUBEvSsRUDSk9rpQjyUYOXDW2ZvLEdsQauG7vPrFF0q4OUoetye6DFm_cZlCMzY0jMrjP7cQlaK5wDPKIcFNXOkEd0gTP5Gzg8vbFxTeyvf4798C1xTBr93UnhIhhFP1FAZTnpd0K7fG1HX3MRuh2eNd45mH3h-kNyj7qyJ18ucg5i2-PyarMVDGqmrhO1wE_3xuGKiYfQRXz1KkSI-hjkTBB0eFcqiMxf2isz_UVJ9m1mCEj3espNuh95KXbDllKYh4bMpcuHG6IY0ttptz_8BhpzOgkN5CLbNlp5GffCVUdXsqzV2xkn_SSBhmcBIqg7pgFBNMZsLblqm0S8ONfhORpoEqBeELqY-xOd9YOGCEJ4KtBleCg2wxA%3D%3D'
+        }
+        $.post(api, async(error, resp, data) => {
+            console.log('== 打印激励视频奖励：', data)
+            try {
+                let con = JSON.parse(data);
+                if (con.success) {
+                    console.log('获得：' + con.items.dialog.score)
+                }
+            } catch (e) {
+                $.log("获取任务失败，" + e)
+            } finally {
+                resolve()
+            }
+        })
+    })
+}
+
+
+function kdHost(api, body) {
+    return {
+        url: 'https://kd.youth.cn/' + api + `&${myuid}&request_time=${Math.round(new Date() / 1000)}`,
+        headers: {
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Referer': 'https://kd.youth.cn/h5/20190301taskcenter/ios/index.html?' + cookie,
+            'Host': 'kd.youth.cn',
+            'User-Agent': UA,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: body,
+        //timeout: 1000,
+    }
+}
+
+binding();
+
+function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),a={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(a,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?(this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)})):this.isQuanX()?(this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t))):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)}))}post(t,e=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.post(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method="POST",this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){this.initGotEnv(t);const{url:s,...i}=t;this.got.post(s,i).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)})}}time(t){let e={"M+":(new Date).getMonth()+1,"d+":(new Date).getDate(),"H+":(new Date).getHours(),"m+":(new Date).getMinutes(),"s+":(new Date).getSeconds(),"q+":Math.floor(((new Date).getMonth()+3)/3),S:(new Date).getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,((new Date).getFullYear()+"").substr(4-RegExp.$1.length)));for(let s in e)new RegExp("("+s+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?e[s]:("00"+e[s]).substr((""+e[s]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl;return{"open-url":e,"media-url":s}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r)));let h=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];h.push(e),s&&h.push(s),i&&h.push(i),console.log(h.join("\n")),this.logs=this.logs.concat(h)}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${s} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}
