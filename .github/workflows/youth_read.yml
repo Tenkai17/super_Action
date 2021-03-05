@@ -4,9 +4,9 @@
 name: 中青自动阅读
 
 on:
-  workflow_dispatch:
-  schedule:
-     - cron: '2-50/20 6-23/5 * * *'
+#   workflow_dispatch:
+#   schedule:
+#      - cron: '2-50/20 6-23/5 * * *'
   watch:
     types: started
 jobs:
