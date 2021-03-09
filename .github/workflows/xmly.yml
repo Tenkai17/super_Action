@@ -22,7 +22,7 @@ jobs:
       - name: 'Install requirements'
         run: pip install requests
         
-      - name: 'run 喜马拉雅极速版 1' 
+      - name: 'run 喜马拉雅极速版 ZZ' 
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
@@ -34,14 +34,14 @@ jobs:
             TG_BOT_TOKEN: ${{secrets.TG_BOT_TOKEN}} # tg通知token
             TG_USER_ID:  ${{secrets.TG_USER_ID}}    # tg通知id
 
-      - name: 'run 喜马拉雅极速版 2'
+      - name: 'run 喜马拉雅极速版 DD'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
         env:
             XMLY_SPEED_COOKIE: ${{ secrets.XMLY_COOKIE_D }}
             
-      - name: 'run 喜马拉雅极速版 3'
+      - name: 'run 喜马拉雅极速版 WZ'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
