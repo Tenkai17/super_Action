@@ -9,6 +9,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    env:
+      XMLY_ZZ: true
+      XMLY_DD: true
+      XMLY_WZ: false
     steps:
       - name: Checkout
         run: |
@@ -22,7 +27,8 @@ jobs:
       - name: 'Install requirements'
         run: pip install requests
         
-      - name: 'run 喜马拉雅极速版 ZZ' 
+      - name: 'run 喜马拉雅极速版 ZZ'
+        if: env.XMLY_ZZ == 'true'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
@@ -35,6 +41,7 @@ jobs:
             TG_USER_ID:  ${{secrets.TG_USER_ID}}    # tg通知id
 
       - name: 'run 喜马拉雅极速版 DD'
+        if: env.XMLY_DD == 'true'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
@@ -42,6 +49,7 @@ jobs:
             XMLY_SPEED_COOKIE: ${{ secrets.XMLY_COOKIE_D }}
             
       - name: 'run 喜马拉雅极速版 WZ'
+        if: env.XMLY_WZ == 'true'
         run: |
           cd ~/Scripts
           python3 xmly_speed.py
