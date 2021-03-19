@@ -48,7 +48,6 @@ jobs:
           python3 xmly_speed_wuzhi01.py
         env:
             XMLY_SPEED_COOKIE: ${{ secrets.XMLY_COOKIE_D }}
-            XMLY_ANDROID_AGENT: ${{ secrets.XMLY_ANDROID_AGENT_D }}
             
       - name: 'run 喜马拉雅极速版 WZ'
         if: env.XMLY_WZ == 'true'
