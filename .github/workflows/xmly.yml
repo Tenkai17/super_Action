@@ -44,7 +44,7 @@ jobs:
         if: env.XMLY_DD == 'true'
         run: |
           cd ~/Scripts
-          python3 xmly_speed.py
+          python3 xmly_speed_wuzhi01.py
         env:
             XMLY_SPEED_COOKIE: ${{ secrets.XMLY_COOKIE_D }}
             
